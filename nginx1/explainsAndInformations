@@ -1,0 +1,40 @@
+# 1. Adım: Bir klasör oluşturuyoruz. 
+# Bu klasör Nginx için gerekli HTML dosyalarını barındıracak.
+# Örneğin: "C:\Users\Sinan\Desktop\containers\nginx" konumunda bir klasör oluşturduk.
+# Bu klasöre `index.html` dosyamızı ekleyeceğiz.
+# Klasörü manuel olarak oluşturabilirsiniz veya komut satırından aşağıdaki gibi yapabilirsiniz:
+mkdir C:\Users\Sinan\Desktop\containers\nginx
+
+# 2. Adım: `index.html` dosyasını oluşturuyoruz.
+# Bu dosyada, Nginx sunucusuna gelen kullanıcıya göstereceğimiz özel bir HTML içeriği bulunacak.
+# Örneğin, aşağıdaki içeriği içeren `index.html` dosyasını oluşturuyoruz:
+# <h1>Hello from the custom web page!</h1>
+# Bu dosyayı `nginx` klasörüne kaydediyoruz.
+# Örnek HTML:
+# <h1>Hello from the custom web page!</h1>
+
+# 3. Adım: Docker komutunu çalıştırıyoruz.
+# Nginx sunucusunu çalıştırmak için Docker kullanacağız.
+# -p 8081:80: Host makinesindeki 8081 portunu, Docker konteynerindeki 80 portuna yönlendirir.
+# -v C:\Users\Sinan\Desktop\containers\nginx:/usr/share/nginx/html: Windows'taki `nginx` klasörünü,
+# Docker konteynerindeki `/usr/share/nginx/html` dizinine bağlar.
+# Bu sayede, Docker konteyneri çalıştığında, host makinesindeki HTML dosyamız kullanılacaktır.
+
+docker run -p 8081:80 -v C:\Users\Sinan\Desktop\containers\nginx:/usr/share/nginx/html nginx
+
+# 4. Adım: Eğer bu komutu çalıştırdığınızda bir hata alırsanız (örneğin: port çakışması),
+# öncelikle portun başka bir işlem tarafından kullanılıp kullanılmadığını kontrol etmelisiniz.
+# Bu durumda aşağıdaki komutu kullanarak 8081 portunu kullanan süreci bulabilirsiniz:
+netstat -ano | findstr :8081
+
+# 5. Adım: Eğer 8081 portunu kullanan bir süreç varsa, bu süreci sonlandırmak için
+# aşağıdaki komutu kullanabilirsiniz. <PID> kısmına netstat komutundan aldığınız süreç ID'sini yazmalısınız.
+taskkill /PID <PID> /F
+
+# 6. Adım: Docker konteynerini yeniden çalıştırın. Bu kez port çakışması yaşanmayacak ve
+# host makinesindeki HTML dosyanız doğru bir şekilde yüklenmelidir.
+docker run -p 8081:80 -v C:\Users\Sinan\Desktop\containers\nginx:/usr/share/nginx/html nginx
+
+# 7. Adım: Nginx'in çalışıp çalışmadığını kontrol etmek için web tarayıcınızı açın.
+# Tarayıcınızda `http://localhost:8081` adresine giderek, kendi oluşturduğumuz HTML sayfasını
+# görmelisiniz. Eğer doğru şekilde çalışıyorsa, sayfada "Hello from the custom web page!" yazısını görmelisiniz.
